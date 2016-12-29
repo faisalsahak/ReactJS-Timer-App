@@ -1,21 +1,27 @@
+var path = require('path');
+var webpack = require('webpack');
+
 module.exports = {
-  entry: './public/app.jsx',
+  devtool: 'eval',
+  entry: [
+    'webpack-dev-server/client?http://localhost:3000',
+    './src/App.jsx'
+  ],
   output: {
-    path: __dirname,
-    filename: './public/bundle.js'
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx']
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/build/'
   },
   module: {
     loaders: [
       {
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015']
-        },
         test: /\.jsx?$/,
-        exclude: /(node_module|bower_components)/
+        loaders: ['babel'],
+        include: path.join(__dirname, 'src')
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
       }
     ]
   }
