@@ -15,8 +15,8 @@ import Countdown from './component/Countdown.jsx'
 ReactDOM.render(
   <Router history = {hashHistory}>
     <Route path= '/' component= {Main}>
-      <Route path= '/timer' component= {Timer} />
-      <Route path = '/countdown' component= {Countdown} />
+      <Route path = 'countdown' component= {Countdown} />
+      <IndexRoute component = {Timer} />
     </Route>
   </Router>
   , document.getElementById('react-root'));
