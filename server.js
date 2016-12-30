@@ -1,21 +1,19 @@
-var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
 var express = require('express');
+
+// Create our app
 var app = express();
 const PORT = process.env.PORT || 3000;
 
-new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
-    watchOptions: {
-      aggregateTimeout: 300,
-      poll: 1000
-    }
-  })
-  .listen(PORT, '0.0.0.0', function (err, result) {
-    if (err) {
-      console.log(err);
-    }
+app.use(function (req, res, next){
+  if (req.headers['x-forwarded-proto'] === 'https') {
+    res.redirect('http://' + req.hostname + req.url);
+  } else {
+    next();
+  }
+});
 
-    console.log('Running at', PORT);
-  });
+app.use(express.static('public'));
+
+app.listen(PORT, function () {
+  console.log('Express server is up on port ' + PORT);
+});
