@@ -1,49 +1,31 @@
+var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
+  devtool: 'eval',
   entry: [
-    'script!jquery/dist/jquery.min.js',
-    'script!foundation-sites/dist/foundation.min.js',
-    './app/app.jsx'
-  ],
-  externals: {
-    jquery: 'jQuery'
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      '$': 'jquery',
-      'jQuery': 'jquery'
-    })
+    'webpack-dev-server/client?http://localhost:3000',
+    './src/App.jsx'
   ],
   output: {
-    path: __dirname,
-    filename: './public/bundle.js'
-  },
-  resolve: {
-    root: __dirname,
-    alias: {
-      Main: 'app/components/Main.jsx',
-      applicationStyles: 'app/styles/app.scss',
-      Navigation: 'app/components/Navigation.jsx',
-      Timer: 'app/components/Timer.jsx',
-      Countdown: 'app/components/Countdown.jsx',
-      Clock: 'app/components/Clock.jsx',
-      CountdownForm: 'app/components/CountdownForm.jsx',
-      Controls: 'app/components/Controls.jsx'
-    },
-    extensions: ['', '.js', '.jsx']
+    path: path.join(__dirname, 'dist'),
+    filename: 'bundle.js',
+    publicPath: '/build/'
   },
   module: {
     loaders: [
+      { test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/,
+        loader: "file"
+      },
       {
-        loader: 'babel-loader',
-        query: {
-          presets: ['react', 'es2015', 'stage-0']
-        },
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/
+        loaders: ['babel'],
+        include: path.join(__dirname, 'src')
+      },
+      {
+        test: /\.scss$/,
+        loaders: ["style", "css", "sass"]
       }
     ]
-  },
-  devtool: 'cheap-module-eval-source-map'
-};
+  }
+}
