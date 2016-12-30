@@ -1,28 +1,49 @@
-var path = require('path');
 var webpack = require('webpack');
 
 module.exports = {
-  devtool: 'eval',
   entry: [
-    'webpack-dev-server/client?http://localhost:3000',
-    './src/App.jsx'
+    'script!jquery/dist/jquery.min.js',
+    'script!foundation-sites/dist/foundation.min.js',
+    './app/app.jsx'
+  ],
+  externals: {
+    jquery: 'jQuery'
+  },
+  plugins: [
+    new webpack.ProvidePlugin({
+      '$': 'jquery',
+      'jQuery': 'jquery'
+    })
   ],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
-    publicPath: '/build/'
+    path: __dirname,
+    filename: './public/bundle.js'
+  },
+  resolve: {
+    root: __dirname,
+    alias: {
+      Main: 'app/components/Main.jsx',
+      applicationStyles: 'app/styles/app.scss',
+      Navigation: 'app/components/Navigation.jsx',
+      Timer: 'app/components/Timer.jsx',
+      Countdown: 'app/components/Countdown.jsx',
+      Clock: 'app/components/Clock.jsx',
+      CountdownForm: 'app/components/CountdownForm.jsx',
+      Controls: 'app/components/Controls.jsx'
+    },
+    extensions: ['', '.js', '.jsx']
   },
   module: {
     loaders: [
       {
+        loader: 'babel-loader',
+        query: {
+          presets: ['react', 'es2015', 'stage-0']
+        },
         test: /\.jsx?$/,
-        loaders: ['babel'],
-        include: path.join(__dirname, 'src')
-      },
-      {
-        test: /\.scss$/,
-        loaders: ["style", "css", "sass"]
+        exclude: /(node_modules|bower_components)/
       }
     ]
-  }
-}
+  },
+  devtool: 'cheap-module-eval-source-map'
+};
